@@ -10,7 +10,12 @@ class Pesanan extends Model
     use HasFactory;
 
     protected $table = 'pesanan';
-    protected $fillable = ['nama_pemesan', 'wa_pemesan', 'tanggal', 'jadwal_id'];
+    protected $fillable = [
+        'nama_pemesan',
+        'wa_pemesan', 
+        'tanggal', 
+        'jadwal_id'
+    ];
 
     public function jadwal()
     {

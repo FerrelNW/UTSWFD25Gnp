@@ -105,7 +105,7 @@ class PesananController extends Controller
             'jadwal_id' => 'required|exists:jadwal,id',
         ]);
 
-        // Cek jadwal bentrok
+        //cek bentrok
         $bentrok = Pesanan::where('jadwal_id', $request->jadwal_id)
             ->where('tanggal', $request->tanggal)
             ->where('id', '!=', $id)
