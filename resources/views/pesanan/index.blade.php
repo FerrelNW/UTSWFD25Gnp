@@ -2,45 +2,45 @@
 
 @section('content')
 <div class="container mx-auto p-4">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">List Pemesanan Lapangan</h2>
-        <a href="{{ route('pesanan.create') }}" class="bg-green-500 text-white px-4 py-2 rounded">+ Pemesanan Baru</a>
+        <a href="{{ route('pesanan.create') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow">+ Pemesanan Baru</a>
     </div>
 
-    <!--filter -->
-    <form method="GET" action="{{ route('pesanan.index') }}" class="mb-4">
+    <!-- Filter Form -->
+    <form method="GET" action="{{ route('pesanan.index') }}" class="mb-6">
         <div class="grid grid-cols-4 gap-4">
-            <select name="nomor_lapangan" class="border p-2">
+            <select name="nomor_lapangan" class="border p-2 rounded">
                 <option value="">Semua Lapangan</option>
                 <option value="1" {{ request('nomor_lapangan') == 1 ? 'selected' : '' }}>Lapangan 1</option>
                 <option value="2" {{ request('nomor_lapangan') == 2 ? 'selected' : '' }}>Lapangan 2</option>
             </select>
 
-            <input type="date" name="tanggal_awal" class="border p-2" value="{{ request('tanggal_awal') }}">
-            <input type="date" name="tanggal_akhir" class="border p-2" value="{{ request('tanggal_akhir') }}">
+            <input type="date" name="tanggal_awal" class="border p-2 rounded" value="{{ request('tanggal_awal') }}">
+            <input type="date" name="tanggal_akhir" class="border p-2 rounded" value="{{ request('tanggal_akhir') }}">
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
                 Tampilkan
             </button>
         </div>
     </form>
 
-    <!--tabel-->
-    <table class="w-full border-collapse border border-gray-300 mt-4">
+    <!-- Tabel Data -->
+    <table class="w-full bg-white rounded-xl shadow text-sm">
         <thead>
             <tr class="bg-gray-200">
-                <th class="border p-2">No</th>
-                <th class="border p-2">Nama Pemesan</th>
-                <th class="border p-2">Nomor WhatsApp</th>
-                <th class="border p-2">Tanggal Booking</th>
-                <th class="border p-2">Nomor Lapangan</th>
-                <th class="border p-2">Jam Pemakaian</th>
-                <th class="border p-2">Tindakan</th>
+                <th class="border p-2 text-center">No</th>
+                <th class="border p-2 text-left">Nama Pemesan</th>
+                <th class="border p-2 text-left">Nomor WhatsApp</th>
+                <th class="border p-2 text-center">Tanggal Booking</th>
+                <th class="border p-2 text-center">Nomor Lapangan</th>
+                <th class="border p-2 text-center">Jam Pemakaian</th>
+                <th class="border p-2 text-center">Tindakan</th>
             </tr>
         </thead>
         <tbody>
             @forelse($pesanan as $index => $p)
-                <tr class="border">
+                <tr class="border hover:bg-gray-100">
                     <td class="border p-2 text-center">{{ $index + 1 }}</td>
                     <td class="border p-2">{{ $p->nama_pemesan }}</td>
                     <td class="border p-2">{{ $p->wa_pemesan }}</td>
@@ -50,14 +50,20 @@
                         {{ $p->jadwal->jam_mulai ?? '-' }} - {{ $p->jadwal->jam_selesai ?? '-' }}
                     </td>
                     <td class="border p-2 text-center">
-                        {{-- edit --}}
-                        <a href="{{ route('pesanan.edit', $p->id) }}" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</a>
-                        {{-- delete --}}
-                        <form action="{{ route('pesanan.destroy', $p->id) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded" onclick="return confirm('Yakin ingin menghapus pesanan ini?')">Hapus</button>
-                        </form>
+                        <div class="flex justify-center space-x-2">
+                            {{-- Edit --}}
+                            <a href="{{ route('pesanan.edit', $p->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded shadow">
+                                Edit
+                            </a>
+                            {{-- Delete --}}
+                            <form action="{{ route('pesanan.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pesanan ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @empty

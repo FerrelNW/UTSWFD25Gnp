@@ -44,9 +44,19 @@
             <input type="date" name="tanggal" class="w-full border rounded p-2 mb-2" value="{{ old('tanggal') }}" required>
 
             <label class="block mb-2">Jadwal:</label>
-            
+            <select name="jadwal_id" class="w-full border rounded p-2 mb-4" required>
+                <option value="">Pilih Jadwal</option>
+                @foreach($jadwal as $j)
+                    <option value="{{ $j->id }}" {{ old('jadwal_id') == $j->id ? 'selected' : '' }}>
+                        Lapangan {{ $j->nomor_lapangan }} | {{ $j->jam_mulai }} - {{ $j->jam_selesai }}
+                    </option>
+                @endforeach
+            </select>
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Pesan</button>
+            <div class="flex justify-between items-center mt-4">
+                <a href="{{ route('pesanan.index') }}" class="text-gray-500 text-sm hover:underline">← Kembali</a>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Pesan</button>
+            </div>
         </form>
     </div>
 </body>

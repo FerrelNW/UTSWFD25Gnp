@@ -15,21 +15,27 @@
         @method('PUT')
 
         <label>Nama Pemesan:</label>
-        <input type="text" name="nama_pemesan" value="{{ $pesanan->nama_pemesan }}" class="border p-2 w-full mb-4" required>
+        <input type="text" name="nama_pemesan" value="{{ $pesanan->nama_pemesan }}" class="w-full px-3 py-2 border border-gray-300 rounded mb-4" required>
 
         <label>Nomor WhatsApp:</label>
-        <input type="text" name="wa_pemesan" value="{{ $pesanan->wa_pemesan }}" class="border p-2 w-full mb-4" required>
+        <input type="text" name="wa_pemesan" value="{{ $pesanan->wa_pemesan }}" class="w-full px-3 py-2 border border-gray-300 rounded mb-4" required>
 
         <label>Tanggal Booking:</label>
-        <input type="date" name="tanggal_booking" value="{{ $pesanan->tanggal_booking }}" class="border p-2 w-full mb-4" required>
+        <input type="date" name="tanggal" value="{{ $pesanan->tanggal }}" class="w-full px-3 py-2 border border-gray-300 rounded mb-4" required>
 
-        <label>Nomor Lapangan:</label>
-        <input type="number" name="nomor_lapangan" value="{{ $pesanan->nomor_lapangan }}" class="border p-2 w-full mb-4" required>
+        <label>Jadwal:</label>
+        <select name="jadwal_id" class="w-full px-3 py-2 border border-gray-300 rounded mb-4" required>
+            @foreach($jadwal as $j)
+                <option value="{{ $j->id }}" {{ $pesanan->jadwal_id == $j->id ? 'selected' : '' }}>
+                    Lapangan {{ $j->nomor_lapangan }} | {{ $j->jam_mulai }} - {{ $j->jam_selesai }}
+                </option>
+            @endforeach
+        </select>
 
-        <label>Jam Pemakaian:</label>
-        <input type="text" name="jam_pemakaian" value="{{ $pesanan->jam_pemakaian }}" class="border p-2 w-full mb-4" required>
-
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Update</button>
+        <div class="flex justify-between items-center mt-4">
+            <a href="{{ route('pesanan.index') }}" class="text-gray-500 text-sm hover:underline">← Kembali</a>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Pesan</button>
+        </div>
     </form>
 </div>
 @endsection

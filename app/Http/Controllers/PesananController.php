@@ -75,14 +75,15 @@ class PesananController extends Controller
     // simpen update
     public function update(Request $request, $id)
     {
+        // Validasi input
         $request->validate([
             'nama_pemesan' => 'required|string|max:100',
-            'wa_pemesan' => 'required|string|size:13',
+            'wa_pemesan' => 'required|string|min:10|max:15',
             'tanggal' => 'required|date',
             'jadwal_id' => 'required|exists:jadwal,id',
         ]);
 
-        // cek jadwal bentrok
+        // Cek jadwal bentrok
         $bentrok = Pesanan::where('jadwal_id', $request->jadwal_id)
             ->where('tanggal', $request->tanggal)
             ->where('id', '!=', $id)
@@ -92,8 +93,14 @@ class PesananController extends Controller
             return redirect()->back()->with('error', 'Jadwal sudah dipesan, silakan pilih jadwal lain.');
         }
 
+        // Update data
         $pesanan = Pesanan::findOrFail($id);
-        $pesanan->update($request->all());
+        $pesanan->update([
+            'nama_pemesan' => $request->nama_pemesan,
+            'wa_pemesan' => $request->wa_pemesan,
+            'tanggal' => $request->tanggal,
+            'jadwal_id' => $request->jadwal_id,
+        ]);
 
         return redirect()->route('pesanan.index')->with('success', 'Pesanan berhasil diperbarui!');
     }
