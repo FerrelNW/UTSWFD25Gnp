@@ -10,21 +10,43 @@ class PesananController extends Controller
 {
     // view index
     public function index(Request $request)
-    {
-        $query = Pesanan::query();
+{
+    $query = Pesanan::query();
 
-        if ($request->filled('nama_pemesan')) {
-            $query->where('nama_pemesan', 'like', '%' . $request->nama_pemesan . '%');
-        }
-
-        if ($request->filled('tanggal')) {
-            $query->where('tanggal', $request->tanggal);
-        }
-
-        $pesanan = $query->orderBy('tanggal', 'asc')->get();
-
-        return view('pesanan.index', compact('pesanan'));
+    //filter no lap
+    if ($request->filled('nomor_lapangan')) {
+        $query->whereHas('jadwal', function ($q) use ($request) {
+            $q->where('nomor_lapangan', $request->nomor_lapangan);
+        });
     }
+
+    // filter tanggal
+    if ($request->filled('tanggal_awal')) {
+        $query->where('tanggal', '>=', $request->tanggal_awal);
+    }
+    if ($request->filled('tanggal_akhir')) {
+        $query->where('tanggal', '<=', $request->tanggal_akhir);
+    }
+
+    // filter jam
+    if ($request->filled('jam_pemakaian')) {
+        [$jam_mulai, $jam_selesai] = explode('-', $request->jam_pemakaian);
+        $query->whereHas('jadwal', function ($q) use ($jam_mulai, $jam_selesai) {
+            $q->where('jam_mulai', '>=', $jam_mulai)
+              ->where('jam_selesai', '<=', $jam_selesai);
+        });
+    }
+
+    // data jam
+    $jam_pemakaian = Jadwal::select('jam_mulai', 'jam_selesai')
+        ->distinct()
+        ->orderBy('jam_mulai')
+        ->get();
+
+    $pesanan = $query->with('jadwal')->get();
+
+    return view('pesanan.index', compact('pesanan', 'jam_pemakaian'));
+}
 
     // ke view pesan
     public function create()
@@ -93,7 +115,7 @@ class PesananController extends Controller
             return redirect()->back()->with('error', 'Jadwal sudah dipesan, silakan pilih jadwal lain.');
         }
 
-        // Update data
+        // update
         $pesanan = Pesanan::findOrFail($id);
         $pesanan->update([
             'nama_pemesan' => $request->nama_pemesan,
